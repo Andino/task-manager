@@ -19,6 +19,7 @@
         "@fortawesome/free-regular-svg-icons": "^6.4.2",
         "@fortawesome/free-solid-svg-icons": "^6.4.2",
         "@fortawesome/vue-fontawesome": "^3.0.3",
+        "@kyvg/vue3-notification": "^3.0.1",
         "@vitejs/plugin-vue": "^4.3.4",
         "vue": "^3.2.36",
         "vue-draggable-next": "^2.2.1",
