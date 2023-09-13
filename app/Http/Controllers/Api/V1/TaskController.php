@@ -27,7 +27,7 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = $this->task->orderBy("priority")->get();
+        $tasks = $this->task->orderBy("order", 'desc')->get();
         return TaskResource::collection($tasks);
     }
 
@@ -39,9 +39,7 @@ class TaskController extends Controller
      */
     public function store(StoreAndUpdateRequest $request)
     {
-        $latest_priority = $this->task->orderBy("priority")->first();
         $task = $this->task->fill($request->all());
-        $task->priority = $latest_priority->priority + 1;
         $task->save();
         return new TaskResource($task);
     }
@@ -66,10 +64,10 @@ class TaskController extends Controller
      */
     public function update(StoreAndUpdateRequest $request, Task $task)
     {
-        $old_task = $this->task->wherePriority($request->priority)->first();
-        //We switch the priority number for both tasks
-        if($old_task){
-            $old_task->priority = $task->priority;
+        $old_task = $this->task->whereOrder($request->order)->first();
+        //We switch the order number for both tasks
+        if ($old_task) {
+            $old_task->order = $task->order;
             $old_task->update();
         }
         $task->fill($request->all());

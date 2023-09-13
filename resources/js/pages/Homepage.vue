@@ -17,6 +17,7 @@
                             <div class="flex flex-col w-full">
                                 <p class="ml-2 text-gray-700 font-semibold font-sans tracking-wide">{{element.name}}</p>
                                 <p class="ml-2 text-gray-500">Project: {{element.project.name}}</p>
+                                <p class="ml-2 text-gray-500">Priority: {{element.priority}}</p>
                             </div>
                             <div class="flex justify-end w-1/2">
                                 <button @click="editTask(element)" class="p-1 focus:outline-none focus:shadow-outline text-blue-400 hover:text-blue-600"><font-awesome-icon icon="fa-edit" /></button>
@@ -30,13 +31,13 @@
 
             <div class="flex justify-center w-full mt-10">
                 <button class="w-1/5 h-10 m-2 rounded-sm bg-blue-200" @click="showTaskModal = true">Create Task</button>
-                <button class="w-1/5 h-10 m-2 rounded-sm bg-blue-200" @click="showProjectModal = true">Create new project</button>
+                <button class="w-1/5 h-10 m-2 rounded-sm bg-blue-200" @click="showProjectModal = true">Create project</button>
             </div>
         </div>
     </div>
     <!-- use the modal component -->
     <transition name="modal">
-        <div class="w-1/2" v-if="showTaskModal" @close="showTaskModal = false">
+        <div class="w-1/2" v-if="showTaskModal" @close="showTaskModal =  false">
             <div class="modal-mask">
                 <div class="modal-wrapper">
                     <div class="modal-container">
@@ -165,6 +166,7 @@ export default {
                 let data = this.taskForm;
                 this.selectedTask.name = data.name;
                 this.selectedTask.project_id = data.project_id;
+                this.selectedTask.priority = data.priority;
                 await axios.put('/api/tasks/'+ this.selectedTask.id, data);
                 await this.fetchTasks();
                 notify({
@@ -234,7 +236,8 @@ export default {
            this.selectedTask = element;
            this.taskForm = {
             "name": element.name,
-            "project_id": element.project.id
+            "project_id": element.project.id,
+            "priority": element.priority
            }
            this.showTaskModal = true;
         },
@@ -255,13 +258,15 @@ export default {
                 let data = item.moved.element;
                 const switchedTask = this.tasks[item.moved.oldIndex];
                 data.project_id = data.project.id;
+                data.order = switchedTask.order;
                 data.priority = switchedTask.priority;
                 await axios.put('/api/tasks/'+ data.id, data);
                 notify({
                     type: 'info',
                     classes: 'bg-notification',
-                    title: "Task priority updated successfully 🎉",
+                    title: "Task order updated successfully 🎉",
                 });
+                await this.fetchTasks();
 
             } catch (error) {
                 notify({

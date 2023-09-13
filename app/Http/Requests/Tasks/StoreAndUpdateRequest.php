@@ -26,7 +26,7 @@ class StoreAndUpdateRequest extends FormRequest
         return [
             "name" => 'required',
             "project_id" => 'required',
-            "priority" => 'numeric',
+            "order" => 'numeric',
         ];
     }
 }

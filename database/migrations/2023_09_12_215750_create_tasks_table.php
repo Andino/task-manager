@@ -16,7 +16,8 @@ return new class extends Migration
         Schema::create('tasks', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->integer("priority")->default(1);
+            $table->integer("order")->default(1);
+            $table->enum("priority", ["High", "Medium", "Low"])->default("Low");
             $table->timestamps();
         });
     }
