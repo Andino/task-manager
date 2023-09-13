@@ -7,9 +7,11 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
-# Demo
+# Demo & Repository
 Here's a link of a 2min demo of the project up & running
 - https://www.loom.com/share/167655d1f91d4eb6aa29e1c097d1fd50?from_recorder=1&focus_title=1
+And if you want to have a track of the commits made it you can go to the repository link
+- https://github.com/Andino/task-manager -> It's public 😋
 
 # Application Execution
 To use the application we need to follow the next steps:
