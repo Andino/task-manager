@@ -6,6 +6,18 @@ import App from './App.vue'
 
 import {createRouter, createWebHistory} from 'vue-router';
 
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+/* import specific icons */
+import { faTrash, faEdit } from '@fortawesome/free-solid-svg-icons'
+
+/* add icons to the library */
+library.add([faTrash, faEdit])
+
 const router = createRouter({
     history: createWebHistory(),
     routes: [
@@ -17,5 +29,6 @@ const router = createRouter({
 })
 
 const app = createApp(App)
+    .component('font-awesome-icon', FontAwesomeIcon)
     .use(router)
     .mount('#app')
