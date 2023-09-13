@@ -13,11 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('tasks', function (Blueprint $table) {
-            $table->id();
-            $table->string("name");
-            $table->string("priority")->enum(["low", "medium", "high"])->default("low");
-            $table->timestamps();
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->unsignedBigInteger('project_id');
+            $table->foreign('project_id')->references('id')->on('projects');
         });
     }
 
@@ -28,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tasks');
+        Schema::table('tasks', function (Blueprint $table) {
+            $table->dropConstrainedForeignId('project_id');
+        });
     }
 };
