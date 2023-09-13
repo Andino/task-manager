@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Tasks\StoreAndUpdateRequest;
 use App\Http\Resources\TaskResource;
 use Illuminate\Http\Request;
 use App\Models\Task;
@@ -22,23 +23,25 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return TaskResource
      */
     public function index()
     {
-        $tasks = $this->task->all();
+        $tasks = $this->task->orderBy("priority")->get();
         return TaskResource::collection($tasks);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  StoreAndUpdateRequest  $request
+     * @return TaskResource
      */
-    public function store(Request $request)
+    public function store(StoreAndUpdateRequest $request)
     {
+        $latest_priority = $this->task->orderBy("priority")->first();
         $task = $this->task->fill($request->all());
+        $task->priority = $latest_priority->priority + 1;
         $task->save();
         return new TaskResource($task);
     }
@@ -46,8 +49,8 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Task $task
+     * @return TaskResource
      */
     public function show(Task $task)
     {
@@ -57,12 +60,18 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  StoreAndUpdateRequest  $request
      * @param  Task  $task
-     * @return \Illuminate\Http\Response
+     * @return TaskResource
      */
-    public function update(Request $request, Task $task)
+    public function update(StoreAndUpdateRequest $request, Task $task)
     {
+        $old_task = $this->task->wherePriority($request->priority)->first();
+        //We switch the priority number for both tasks
+        if($old_task){
+            $old_task->priority = $task->priority;
+            $old_task->update();
+        }
         $task->fill($request->all());
         $task->update();
         return new TaskResource($task);
@@ -71,8 +80,8 @@ class TaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  Task $task
+     * @return TaskResource
      */
     public function destroy(Task $task)
     {
